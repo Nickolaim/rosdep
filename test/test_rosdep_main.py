@@ -278,13 +278,12 @@ class TestRosdepMain(unittest.TestCase):
 
     @patch('sys.exit')
     def test_invalid_package_message(self, exit_mock):
-        test_package_dir = os.path.abspath(os.path.join(get_test_dir(), 'main', 'invalid_package_version'))
-        rosdep_main(['install', '--from-path', test_package_dir])
-        assert False, exit_mock.call_args
-        assert exit_mock.call_count == 1
-        assert exit_mock.call_args == call(1)
-        stdout, stderr = b
-        output = stdout.getvalue().splitlines()
-        assert len(output) == 2
-        assert test_package_dir in output[0]
-        assert 'Package version ":{version}" does not follow version conventions' == output[1]
+        with fakeout() as b:
+            test_package_dir = os.path.abspath(os.path.join(get_test_dir(), 'main', 'invalid_package_version'))
+            rosdep_main(['install', '--from-path', test_package_dir])
+            assert exit_mock.call_args == call(1)
+            stdout, stderr = b
+            output = stdout.getvalue().splitlines()
+            assert len(output) == 2
+            assert ("Error(s) in package '%s':" % test_package_dir) in output[0]
+            assert 'Package version ":{version}" does not follow version conventions' == output[1]
