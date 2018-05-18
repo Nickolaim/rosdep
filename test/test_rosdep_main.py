@@ -281,9 +281,9 @@ class TestRosdepMain(unittest.TestCase):
         with fakeout() as b:
             test_package_dir = os.path.abspath(os.path.join(get_test_dir(), 'main', 'invalid_package_version'))
             rosdep_main(['install', '--from-path', test_package_dir])
-            print("exit mock debug info")
-            print(exit_mock)
-            print(exit_mock.call_count)
+            print("exit mock debug info", file=sys.stderr)
+            print(exit_mock, file=sys.stderr)
+            print(exit_mock.call_count, file=sys.stderr)
             assert exit_mock.call_count == 1
             assert exit_mock.call_args == call(1)
             stdout, stderr = b
