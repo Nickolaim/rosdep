@@ -281,7 +281,7 @@ class TestRosdepMain(unittest.TestCase):
             test_package_dir = os.path.abspath(os.path.join(get_test_dir(), 'main', 'invalid_package_version'))
             with patch('rosdep2.main.sys.exit') as exit_mock:
                 rosdep_main(['install', '--from-path', test_package_dir])
-                assert exit_mock.called
+                exit_mock.assert_called_once_with(1)
             stdout, stderr = b
             output = stdout.getvalue().splitlines()
             assert len(output) == 2
